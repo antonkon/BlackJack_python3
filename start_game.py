@@ -3,20 +3,42 @@ if __name__ != '__main__':
     exit()
 
 import json
-from Deck import Deck
-from Shoe import Shoe
+import GUI
+from Gamer import Gamer
 
 
-# открыть файл config и взять из него параметр: количество колод
-f = open("config.json", "r")
-conf = json.loads(f.read())
+# Выводим приветственное сообщение, главное меню и ждём действий пользователя
+GUI.show_start_message()
+GUI.show_main_menu([1, 10])
+act = GUI.get_start_action()
 
-# Создаём шуз: передаём функцию которая возвращает карты и количество колод участвующих в игре
-shoe = Shoe(Deck.create_deck, conf['number_deck'])
+# Если пользователь ввёл: 1
+if act == '1':
 
+    f = open("config.json", "r")
+    conf = json.loads(f.read())
 
-print(shoe.get_card())
-print(shoe.get_card())
-print(shoe.get_card())
-print(shoe.get_card())
-print(shoe.num_cards)
+    # Создаём пользователя
+    # Запрашиваем имя с консоли и считываем значение стартого капиталла из конфига
+    gamer = Gamer(str(GUI.get_name_gamer()), conf['start_capital'])
+    # Выводим стартовый капитал и закрываем файл конфига
+    GUI.show_start_capital(gamer)
+    f.close()
+
+    # Показываем следующее меню, ждём действий пользователя и заходим в соответствующий блок условий
+    GUI.show_game_menu()
+    act = GUI.get_action()
+    if act == '1':
+        # Создаем стол, крупье и начинаем игру
+        pass
+
+    else:
+        # Показываем прощальное сообщение и заверщаем программу
+        GUI.show_bye()
+        exit()
+
+# Если пользователь ввёл: 0
+elif act == '0':
+    # Показываем прощальное сообщение и заверщаем программу
+    GUI.show_bye()
+    exit()
