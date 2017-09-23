@@ -9,20 +9,19 @@ class Table:
      Раздаёт карты.
 
     """
-    user = ''
-    ante = 0
+    user = {'name': '', 'card': [], 'ante': 0}
+    croupier = {'card': []}
 
-    def __init__(self, user, get_card):
+    def __init__(self, user_name):
         """Создаёт стол.
         Создание стола заключается в добавлении пользователя в стол.
 
-        :param user: Игрок. Gamer
+        :param user_name: имя игрока
         :param get_card: Функция выдачи карт.
         """
-        self.user = user
-        self.get_card = get_card
+        self.user['name'] = user_name
 
-        # Создать карты, шуз
+        # Создать карты и шуз
         # открыть файл config и взять из него параметр: количество колод
         f = open("config.json", "r")
         conf = json.loads(f.read())

@@ -5,6 +5,8 @@ if __name__ != '__main__':
 import json
 import GUI
 from Gamer import Gamer
+from Table import Table
+from Croupier import Croupier
 
 
 # Выводим приветственное сообщение, главное меню и ждём действий пользователя
@@ -30,7 +32,18 @@ if act == '1':
     act = GUI.get_action()
     if act == '1':
         # Создаем стол, крупье и начинаем игру
-        pass
+        table = Table(gamer.name)
+        croupier = Croupier(table)
+        while True:
+            # Спросить размер и поставить ставку
+            table.user['ante'] = gamer.place_ante(int(GUI.get_ante()))
+            croupier.issue_cards_gamer()
+            croupier.issue_cards_croupier()
+
+            GUI
+            act = GUI.get_action()
+            if act:
+                break
 
     else:
         # Показываем прощальное сообщение и заверщаем программу

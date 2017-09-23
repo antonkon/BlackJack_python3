@@ -5,7 +5,6 @@ class Gamer:
     При печати показывает текущее значение баланса.
 
     """
-    cards = []
 
     def __init__(self, name, start_capital):
         """Сохраняет начальноое значение баланса.
@@ -28,5 +27,6 @@ class Gamer:
             # Сделать запись о списывании средств
             f = open('game_log', 'w')
             f.write('Debit gamer: {0} at the rate of: {1}, it was: {2}'.format(self.name, size_ante, self.balance))
+            f.close()
             self.balance -= size_ante
             return size_ante
