@@ -9,8 +9,8 @@ class Table:
      Раздаёт карты.
 
     """
-    user = {'name': '', 'card': [], 'ante': 0}
-    croupier = {'card': []}
+    user = {'name': '', 'card': [], 'points': 0, 'ante': 0}
+    croupier = {'name': 'Крупье', 'card': [], 'points': 0}
 
     def __init__(self, user_name):
         """Создаёт стол.

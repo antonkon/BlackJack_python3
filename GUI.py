@@ -10,7 +10,8 @@ def show_start_message():
 
 def show_main_menu(lines_menu):
     """ Показать главное меню. """
-    menu = {1: '  1. Новая игра.\n', 2: '  2. Загрузить игру.\n', 10: '  0. Выход.\n'}
+    print('---------------------------------')
+    menu = {1: '  1. Новая игра.\n', 2: '  2. Загрузить игру.\n', 3: '  3. Восстановить игру.\n', 10: '  0. Выход.\n'}
     mes = ''
     for line in sorted(lines_menu):
         mes += menu[line]
@@ -42,7 +43,7 @@ def get_name_gamer():
 def show_game_menu():
     """ Показать игровое меню. """
     print('---------------------------------')
-    print('  1. Играть.\n  0. Выйти.')
+    print('  1. Играть.\n  0. Назад.')
 
 
 def show_start_capital(gamer):
@@ -66,15 +67,25 @@ def get_ante():
     return input('Размер вашей ставки ?\n> ')
 
 
-def show_card(cards):
-    """ Показать карты. """
-    s = '{0}\n{1}\n{2}\n{3}'.format(' ___ '*len(cards), '|   |'*len(cards), '| {.name} |'*len(cards), '|___|'*len(cards))
+def show_card_points(cards, points):
+    """ Показать карты и очки. """
+    s = '{0}\n{1}\n{2}\n{3}'.format(' ___ '*len(cards), '|   |'*len(cards),
+                                    '| {.name} |'*len(cards), '|___|'*len(cards))
     print(s.format(*cards).replace('10 ', '10'))
+    print('Кол-во очков: '+str(points))
+
+
+class ErrorCode():
+    not_bet = 101
+
+    error_dict = {
+        not_bet: 'ERRPR: '
+    }
 
 
 def show_err(err):
     """ Показать ошибку. """
-    if err == 101:
+    if err == ErrorCode.not_bet:
         print('ERROR: Ставка не сделана!')
 
 
@@ -82,3 +93,16 @@ def show_game_dial():
     """ Показать игровой диалог. """
     print('---------------------------------')
     print('  1. Ещё.\n  0. Хватит.')
+
+
+def show_part_end(player1, player2, is_win):
+    print('---------------------------------')
+    print('Карты ' + player1['name'] + ':')
+    show_card_points(player1['card'], player1['points'])
+    print('Карты ' + player2['name'] + ':')
+    show_card_points(player2['card'], player2['points'])
+
+    if is_win:
+        print('Вы выйграли !')
+    else:
+        print('Вы проиграли !')

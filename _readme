@@ -3,9 +3,22 @@
 	4 х4 		16
 				52
 
+сделать GUI синглтоном
 
-
+для ошибок сделать отдельный класс
 
 
 Время разработки:
-19 30 -
+19 30 - 01 00
+
+
+пример лог файла
+
+start game BlackJack
+create gamer: ..., balance: 10
+Debit off gamer: 12, size: 2, balance: 8
+Issuance of cards croupier: V 9
+Issuance of cards gamer: 12: K
+Issuance of cards gamer: 12: K 9
+
+end game BlackJack

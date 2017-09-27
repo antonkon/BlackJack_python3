@@ -25,8 +25,14 @@ class Gamer:
         """
         if size_ante <= self.balance:
             # Сделать запись о списывании средств
-            f = open('game_log', 'w')
-            f.write('Debit gamer: {0} at the rate of: {1}, it was: {2}'.format(self.name, size_ante, self.balance))
-            f.close()
             self.balance -= size_ante
+            f = open('game_log', 'a')
+            f.write('Debit off gamer: {0}, size: {1}, balance: {2}\n'.format(self.name, size_ante, self.balance))
+            f.close()
+
             return size_ante
+    def put_gain(self, gain):
+        self.balance += gain
+        f = open('game_log', 'a')
+        f.write('Put gain gamer: {0}, size: {1}, balance: {2}\n'.format(self.name, gain, self.balance))
+        f.close()

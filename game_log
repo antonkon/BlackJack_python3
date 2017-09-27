@@ -1,3 +1,26 @@
-Issuance of cards gamer: sss: 6 T 9 
-Issuance of cards croupier: V 
-Issuance of cards croupier: V 7 
+---------------Start game BlackJack---------------
+Create gamer: 12, balance: 10
+Create gamer: 12, balance: 10
+Debit off gamer: 12, size: 2, balance: 8
+Issuance of cards croupier: V 3 D , points: 23
+Issuance of cards gamer: 12: 9 , points: 9
+Issuance of cards gamer: 12: 9 8 , points: 17
+Clear card and ante 
+Put gain gamer: 12, size: 0, balance: 8
+Debit off gamer: 12, size: 2, balance: 6
+Issuance of cards croupier: 10 D , points: 20
+Issuance of cards gamer: 12: 4 , points: 4
+Issuance of cards gamer: 12: 4 8 , points: 12
+Issuance of cards gamer: 12: 4 8 9 , points: 21
+Clear card and ante 
+Put gain gamer: 12, size: 2, balance: 8
+Debit off gamer: 12, size: 2, balance: 6
+Issuance of cards croupier: 4 D K , points: 24
+Issuance of cards gamer: 12: 2 , points: 2
+Issuance of cards gamer: 12: 2 4 , points: 6
+Issuance of cards gamer: 12: 2 4 6 , points: 12
+Issuance of cards gamer: 12: 2 4 6 3 , points: 15
+Issuance of cards gamer: 12: 2 4 6 3 8 , points: 23
+Clear card and ante 
+Put gain gamer: 12, size: 0, balance: 6
+================End game BlackJack================
