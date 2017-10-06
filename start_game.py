@@ -99,54 +99,54 @@ while True:
                     act = GUI.get_action()
 
                 if act == '1':
-                    # Создаем стол, крупье и начинаем игру
-                    table = Table(gamer.name)
-                    croupier = Croupier(table)
-                    while True:
-                        # log начала партии
+
+                    if not 'table' in locals():
+                        # Создаем стол, крупье и начинаем игру
+                        table = Table(gamer.name)
+                        croupier = Croupier(table)
+
+                    # log начала партии
+                    with open('game_log', 'a') as f:
+                        log = 'Start_part '
+                        f.write(log + '\n')
+                    # Спросить размер и поставить ставку
+                    try:
+                        ante = int(GUI.get_ante(gamer))
+
+                    except ValueError:
+                        # log конца партии
                         with open('game_log', 'a') as f:
-                            log = 'Start_part '
+                            log = 'End_part '
                             f.write(log + '\n')
-                        # Спросить размер и поставить ставку
-                        try:
-                            ante = int(GUI.get_ante(gamer))
+                        continue
 
-                        except ValueError:
-                            act = '/1'
-                            break
-
-                        if 0 < ante:
-                            table.user['ante'] = gamer.place_ante(ante)
-                        else:
-                            act = '/1'
-                            # log конца партии
-                            with open('game_log', 'a') as f:
-                                log = 'End_part '
-                                f.write(log + '\n')
-                            break
-                        # Выдать карты крупье
-                        croupier.issue_cards_croupier()
-                        # Выдать карты игроку
-                        croupier.issue_cards_gamer()
-                        # Узнать исход игры
-                        is_win = croupier.calculate_points()
-                        # Очистить стол, убрат карты и ставку
-                        gain = croupier.clear_card_get_ante(is_win)
-                        # При выйгрыше увеличить баланс игрока
-                        gamer.put_gain(gain)
+                    if 0 < ante:
+                        table.user['ante'] = gamer.place_ante(ante)
+                    else:
 
                         # log конца партии
                         with open('game_log', 'a') as f:
                             log = 'End_part '
                             f.write(log + '\n')
-
-                        act = '/1'
-                        break
-
-                    if act == '/1':
                         continue
-                    else:
-                        break
+                    # Выдать карты крупье
+                    croupier.issue_cards_croupier()
+                    # Выдать карты игроку
+                    croupier.issue_cards_gamer()
+                    # Узнать исход игры
+                    is_win = croupier.calculate_points()
+                    # Очистить стол, убрат карты и ставку
+                    gain = croupier.clear_card_get_ante(is_win)
+                    # При выйгрыше увеличить баланс игрока
+                    gamer.put_gain(gain)
+
+                    # log конца партии
+                    with open('game_log', 'a') as f:
+                        log = 'End_part '
+                        f.write(log + '\n')
+
+
+
                 elif act == '0':
                     break
                 else:

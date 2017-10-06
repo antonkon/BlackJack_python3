@@ -32,3 +32,37 @@ Clear card and ante
 Put gain gamer: 13, size: 0, balance: 10
 End_part 
 Start_part 
+---------------Start game BlackJack---------------
+Create gamer: 33, balance: 10
+Start_part 
+Start_part 
+Debit off gamer: 33, size: 2, balance: 8
+---------------Start game BlackJack---------------
+Load_list games
+Load_game: 33
+Start_part 
+Debit off gamer: 33, size: 2, balance: 6
+Issuance of cards croupier: 7 8 10 , points: 25
+Issuance of cards gamer: 33: 6 , points: 6
+Issuance of cards gamer: 33: 6 5 , points: 11
+Issuance of cards gamer: 33: 6 5 9 , points: 20
+Result of the game: 33, Win
+Clear card and ante 
+Put gain gamer: 33, size: 4, balance: 10
+End_part 
+---------------Start game BlackJack---------------
+Load_list games
+Load_game: 33
+Start_part 
+End_part 
+Start_part 
+Debit off gamer: 33, size: 2, balance: 8
+Issuance of cards croupier: 2 6 9 , points: 17
+Issuance of cards gamer: 33: 7 , points: 7
+Issuance of cards gamer: 33: 7 6 , points: 13
+Issuance of cards gamer: 33: 7 6 10 , points: 23
+Result of the game: 33, Lesion
+Clear card and ante 
+Put gain gamer: 33, size: 0, balance: 8
+End_part 
+================End game BlackJack================
