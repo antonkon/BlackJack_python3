@@ -36,7 +36,7 @@ def get_name_gamer():
     """
     print('---------------------------------')
     print('           Новая игра:')
-    name = input('Введите имя игрока: ')
+    name = input('Введите название игры: ')
     return name
 
 
@@ -62,8 +62,9 @@ def show_bye():
     print('До свидания!')
 
 
-def get_ante():
+def get_ante(gamer):
     """ Спросить размер ставки. """
+    print('Ваш баланс: {}'.format(str(gamer.balance)))
     return input('Размер вашей ставки ?\n> ')
 
 
@@ -106,3 +107,20 @@ def show_part_end(player1, player2, is_win):
         print('Вы выйграли !')
     else:
         print('Вы проиграли !')
+
+
+def show_stat_game(win, les):
+    """Показать статистику игры
+
+    :param win: Кол-во выйгрышей игрока
+    :param les: Кол-во пройгрышей игрока
+    :return:
+    """
+    print('{} : {} (выйгрышей : пройгрышей)'.format(str(win), str(les)))
+def show_load_games(users):
+    print('---------------------------------')
+    print('Выберите игру:')
+    i = 0
+    for user in users:
+        i += 1
+        print('  '+str(i)+'. '+user)

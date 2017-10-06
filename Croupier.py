@@ -1,4 +1,5 @@
 import GUI
+import json
 
 
 class Croupier:
@@ -71,15 +72,123 @@ class Croupier:
         is_win = 0
         if self.table.user['points'] > 21:
             is_win = 0
-        elif self.table.user['points'] == 21 and self.table.croupier['points'] != 21:
+
+        elif self.table.croupier['points'] > 21:
             is_win = 1
+            self.table.user['ante'] = self.table.user['ante'] * 2
+
+        elif self.table.user['points'] == 21:
+            if self.table.croupier['points'] == 21:
+                is_win = 1
+
+            else:
+                is_win = 1
+                self.table.user['ante'] *= 3
+
+        elif self.table.croupier['points'] == 21:
+            is_win = 0
+
         elif self.table.user['points'] > self.table.croupier['points']:
             is_win = 1
+
+        # log результата игры
+        with open('game_log', 'a') as f:
+            if is_win:
+                log = 'Result of the game: {}, Win'.format(self.table.user['name'])
+            else:
+                log = 'Result of the game: {}, Lesion'.format(self.table.user['name'])
+            f.write(log + '\n')
 
         # Вскрыться: показать карты крупье, карты игрока и выйграл или проиграл игрок
         GUI.show_part_end(self.table.croupier, self.table.user, is_win)
 
+
+        # Показать и записать статистику игры
+        line = self.write_stat_game(is_win)
+        GUI.show_stat_game(line[0], line[1])
+
         return is_win
+
+    def write_stat_game(self, is_win):
+        line = [0, 0, 0]
+        try:
+            # Открыть файл и считываем json объект
+            with open('stat_log.json', 'r') as fr:
+                stat_log = json.loads(fr.read())
+
+        except IOError:
+            # Если файл не существует
+            if is_win:
+                line[0] += 1
+            else:
+                line[1] += 1
+
+            # Формируем словарь и записываем в json файл
+            stat_log = {}
+            stat_log[self.table.user['name']] = line
+
+            with open('stat_log.json', 'w') as fw:
+                json.dump(stat_log, fw)
+
+            return line
+
+        try:
+            # Если файл существует и в нём есть нужная запись
+            # Достаем из него значения и увеличиваем одно из них
+            line = stat_log[self.table.user['name']]
+
+        except KeyError:
+            # Если файл существует, но в нём нет нужной записи
+            line = [0, 0, 0]
+
+        if is_win:
+            line[0] += 1
+        else:
+            line[1] += 1
+
+        stat_log[self.table.user['name']] = line
+
+        with open('stat_log.json', 'w') as fw:
+            json.dump(stat_log, fw)
+
+        return line
+
+    @classmethod
+    def write_stat_game_all(cls, name_game, balance, win=0, les=0):
+        line = [win, les, balance]
+        try:
+            # Открыть файл и считываем json объект
+            with open('stat_log.json', 'r') as fr:
+                stat_log = json.loads(fr.read())
+
+        except IOError:
+            # Если файл не существует
+            # Формируем словарь и записываем в json файл
+            stat_log = {}
+            stat_log[name_game] = line
+
+            with open('stat_log.json', 'w') as fw:
+                json.dump(stat_log, fw)
+
+            return
+
+        try:
+            # Если файл существует и в нём есть нужная запись
+            # Достаем из него значения
+            line = stat_log[name_game]
+            line[2] = balance
+
+        except KeyError:
+            # Если файл существует, но в нём нет нужной записи
+            line = [win, les, balance]
+
+        stat_log[name_game] = line
+
+        with open('stat_log.json', 'w') as fw:
+            json.dump(stat_log, fw)
+
+        return
+
 
     def clear_card_get_ante(self, is_win):
         """Очищает поля с картами и поле ставки относительно результата игры
@@ -101,9 +210,8 @@ class Croupier:
         self.table.croupier['points'] = 0
 
         # log очистки карт и ставки
-        f = open('game_log', 'a')
-        log = 'Clear card and ante '
-        f.write(log+'\n')
-        f.close()
+        with open('game_log', 'a')as f:
+            log = 'Clear card and ante '
+            f.write(log+'\n')
 
         return gain
