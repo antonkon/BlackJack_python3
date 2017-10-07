@@ -12,17 +12,24 @@ from Croupier import Croupier
 # Выводим приветственное сообщение, главное меню и ждём действий пользователя
 GUI.show_start_message()
 
-
+# Показывает что игра может быть загружена
 is_restore_game = 0
-_flag = ['', '']
+_flag = ['', '', '']
+__min_stack = 10
 
 # Загрузка части лог файла
 with open('game_log', 'r') as f:
     block_log = []
+    i = 0
     for line in f.readlines():
         if line.find('Start game') != -1:
-            block_log = []
+            i = 0
+
+        i += 1
         block_log.append(line)
+        if len(block_log) >= __min_stack and i < __min_stack:
+            while len(block_log) > __min_stack:
+                block_log.pop(0)
 
 # Проверка корректности завершения прошлого сеанса игры
 if block_log[-1].find('End game') == -1:
@@ -60,6 +67,7 @@ while True:
         else:
             GUI.show_main_menu([1, 10])
 
+    is_exist_games = 0
     act = GUI.get_start_action()
 
     while True:
@@ -67,7 +75,7 @@ while True:
         if act == '1':
             # Создаём пользователя
             # Запрашиваем имя с консоли и считываем значение стартого капиталла из конфига
-            if not 'gamer' in globals():
+            if _flag[0] != '/1' and _flag[1] != '/2' and is_exist_games == 0:
                 with open("config.json", "r") as f:
                     conf = json.loads(f.read())
 
@@ -82,18 +90,23 @@ while True:
             # Выводим стартовый капитал
             if is_exist_games == 0:
                 # Если не загружали игру
-                is_exist_games = 1
                 GUI.show_start_capital(gamer)
             else:
                 # Если загружали игру
-                if _flag[0] != '/1':
+                if _flag[0] == '/1':
+                    GUI.show_name_gamer(gamer)
                     GUI.show_capital(gamer)
+                    _flag = ['', '', '']
+                elif _flag[1] != '/2':
+                    GUI.show_capital(gamer)
+
 
             # Показываем следующее меню (игровое меню), ждём действий пользователя и заходим в соответствующий блок условий
             while True:
-                if _flag[0] == '/1':
+                if _flag[1] == '/2':
+                    GUI.show_name_gamer(gamer)
                     act = '1'
-                    _flag = ['']
+                    _flag = ['', '', '']
                 else:
                     GUI.show_game_menu()
                     act = GUI.get_action()
@@ -112,6 +125,13 @@ while True:
                     # Спросить размер и поставить ставку
                     try:
                         ante = int(GUI.get_ante(gamer))
+                        if gamer.balance - ante <= 0:
+                            GUI.show_not_enough_money()
+
+                            with open('game_log', 'a') as f:
+                                log = 'End_part '
+                                f.write(log + '\n')
+                            continue
 
                     except ValueError:
                         # log конца партии
@@ -168,15 +188,18 @@ while True:
         elif act == '2':
             if _flag[0] == '/1':
                 # Случай восстановления после сбоя
-                gamer = Gamer(_flag[1], stat_log[_flag[1]][2])
-                try:
-                    _flag.index('/2')
-                except Exception:
+                gamer = Gamer(_flag[2], stat_log[_flag[2]][2])
+
+                if _flag[1] == '/2':
                     _flag[0] = ''
+
+                with open('game_log', 'a') as f:
+                    log = 'Load_game: ' + _flag[2]
+                    f.write(log + '\n')
             else:
                 # Загрузить список начитых игр
                 names = set(stat_log)
-                GUI.show_load_games(names)
+                GUI.show_list_games(names)
                 # log загрузки списка игр
                 with open('game_log', 'a') as f:
                     log = 'Load_list games'
@@ -185,9 +208,12 @@ while True:
                 act = GUI.get_action()
                 # Загрузить игру
                 # log загрузки игры
+
                 try:
                     act = int(act)
                 except Exception:
+                    break
+                if act == 0:
                     break
                 names = list(names)
                 gamer = Gamer(names[act-1], stat_log[names[act-1]][2])
@@ -196,6 +222,7 @@ while True:
                     log = 'Load_game: ' + names[act-1]
                     f.write(log + '\n')
 
+            is_exist_games = 1
             act = '1'
 
         elif act == '3':
@@ -206,25 +233,67 @@ while True:
                 log = 'Restore after fail'
                 f.write(log + '\n')
 
-            while block_log != []:
+            while len(block_log) != 0:
                 str_log = block_log.pop()
                 stage = str_log[:str_log.find(' ')]
 
-                # if stage == 'Start' or
-                if stage == 'Create':
-                    _flag = ['/1', str_log[str_log.find(': ')+2:str_log.find(',')]]
-                    act = '2'
+                if stage.startswith('-'):
+                    stage = stage.replace('---------------', '')
+
+                if stage == 'Start':
+                    act = ''
                     break
 
                 elif stage == 'Start_part':
-                    str_log = block_log.pop()
-                    stage = str_log[:str_log.find(' ')]
+                    _flag[0] = '/1'
+                    _flag[1] = '/2'
+                    _flag[2] = str_log[str_log.find(': ') + 2:str_log.find(',')]
+                    continue
 
-                    if stage == 'Load_game:' or stage == 'Create':
-                        _flag = ['/1', str_log[str_log.find(': ') + 2:str_log.find(',')], '/2']
-
+                elif stage == 'Load_game:' or stage == 'Create':
+                    _flag[0] = '/1'
+                    _flag[2] = str_log[str_log.find(': ') + 2:str_log.find(',')]
                     act = '2'
                     break
+
+                elif stage == 'Restore':
+                    while stage != 'Start':
+                        str_log = block_log.pop()
+                        stage = str_log[:str_log.find(' ')]
+
+                        if stage.startswith('-'):
+                            stage = stage.replace('---------------', '')
+
+                elif stage == 'Load_list':
+                    act = '2'
+                    break
+
+                elif stage == 'Issuance':
+                    while stage != 'Debit':
+                        str_log = block_log.pop()
+                        stage = str_log[:str_log.find(' ')]
+
+                    # Вернуть ставку
+                    name_game = str_log[str_log.find(': ')+2:str_log.find(',')]
+                    ante = int(str_log[str_log.find('e: ')+3:str_log.find(', b')])
+                    balance = int(str_log[str_log.find('balance: ')+9:-1])
+                    Croupier.write_stat_game_all(name_game, ante + balance)
+
+                    continue
+
+                elif stage == 'End_part':
+                    while stage != 'Load_game:' and stage != 'Create':
+                        str_log = block_log.pop()
+                        stage = str_log[:str_log.find(' ')]
+
+                    _flag[0] = '/1'
+                    _flag[2] = str_log[str_log.find(': ') + 2:str_log.find(',')]
+                    act = '2'
+                    break
+
+            else:
+                GUI.show_restore_fail()
+                act = ''
 
             is_restore_game = 0
 

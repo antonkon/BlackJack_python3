@@ -73,10 +73,6 @@ class Croupier:
         if self.table.user['points'] > 21:
             is_win = 0
 
-        elif self.table.croupier['points'] > 21:
-            is_win = 1
-            self.table.user['ante'] = self.table.user['ante'] * 2
-
         elif self.table.user['points'] == 21:
             if self.table.croupier['points'] == 21:
                 is_win = 1
@@ -85,11 +81,16 @@ class Croupier:
                 is_win = 1
                 self.table.user['ante'] *= 3
 
+        elif self.table.croupier['points'] > 21:
+            is_win = 1
+            self.table.user['ante'] *= 2
+
         elif self.table.croupier['points'] == 21:
             is_win = 0
 
         elif self.table.user['points'] > self.table.croupier['points']:
             is_win = 1
+            self.table.user['ante'] *= 2
 
         # log результата игры
         with open('game_log', 'a') as f:
@@ -155,6 +156,14 @@ class Croupier:
 
     @classmethod
     def write_stat_game_all(cls, name_game, balance, win=0, les=0):
+        """Запись статистики игр.
+        Этот метод должен быть в классе Gamer
+        :param name_game: Название игры
+        :param balance: Баланс
+        :param win: Кол-во выйгрышей
+        :param les: Кол-во пройгрышей
+        :return:
+        """
         line = [win, les, balance]
         try:
             # Открыть файл и считываем json объект

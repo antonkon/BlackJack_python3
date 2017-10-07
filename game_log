@@ -1,68 +1,86 @@
-Issuance of cards gamer: 15: 3 4 9 D , points: 26
-Result of the game: 15, Lesion
-Clear card and ante 
-Put gain gamer: 15, size: 0, balance: 8
-End part
-Start part
 ---------------Start game BlackJack---------------
+Create gamer: 81, balance: 10
+Start_part 
+Debit off gamer: 81, size: 2, balance: 8
+Issuance of cards croupier: 9 D , points: 19
+Issuance of cards gamer: 81: 7 , points: 7
+Issuance of cards gamer: 81: 7 K , points: 17
+Result of the game: 81, Lesion
+Clear card and ante 
+Put gain gamer: 81, size: 0, balance: 8
+End_part 
+Start_part 
+Debit off gamer: 81, size: 2, balance: 6
+Issuance of cards croupier: 5 K 6 , points: 21
+Issuance of cards gamer: 81: 3 , points: 3
+Issuance of cards gamer: 81: 3 V , points: 13
+Issuance of cards gamer: 81: 3 V 2 , points: 15
+Issuance of cards gamer: 81: 3 V 2 7 , points: 22
+Result of the game: 81, Lesion
+Clear card and ante 
+Put gain gamer: 81, size: 0, balance: 6
+End_part 
+Start_part 
+Debit off gamer: 81, size: 2, balance: 4
+Issuance of cards croupier: 2 8 K , points: 20
+Issuance of cards gamer: 81: 6 , points: 6
+Issuance of cards gamer: 81: 6 T , points: 17
+Result of the game: 81, Lesion
+Clear card and ante 
+Put gain gamer: 81, size: 0, balance: 4
+End_part 
+Start_part 
+Debit off gamer: 81, size: 2, balance: 2
+Issuance of cards croupier: 9 3 4 10 , points: 26
+Issuance of cards gamer: 81: 9 , points: 9
+Issuance of cards gamer: 81: 9 3 , points: 12
+Issuance of cards gamer: 81: 9 3 V , points: 22
+Result of the game: 81, Lesion
+Clear card and ante 
+Put gain gamer: 81, size: 0, balance: 2
+End_part 
 Load_list games
-Load_game: 13
-Start_part
----------------Start game BlackJack---------------
-Restore after fail
+Load_game: 81
 Start_part 
-Debit off gamer: 13, size: 2, balance: 6
-Issuance of cards croupier: 6 T , points: 17
-Issuance of cards gamer: 13: K , points: 10
-Issuance of cards gamer: 13: K 5 , points: 15
-Issuance of cards gamer: 13: K 5 6 , points: 21
-Result of the game: 13, Win
+Debit off gamer: 81, size: 1, balance: 1
+Issuance of cards croupier: 9 3 T , points: 23
+Issuance of cards gamer: 81: V , points: 10
+Issuance of cards gamer: 81: V 9 , points: 19
+Result of the game: 81, Win
 Clear card and ante 
-Put gain gamer: 13, size: 6, balance: 12
+Put gain gamer: 81, size: 2, balance: 3
 End_part 
 Start_part 
-Debit off gamer: 13, size: 2, balance: 10
-Issuance of cards croupier: 8 10 , points: 18
-Issuance of cards gamer: 13: 5 , points: 5
-Issuance of cards gamer: 13: 5 3 , points: 8
-Issuance of cards gamer: 13: 5 3 3 , points: 11
-Issuance of cards gamer: 13: 5 3 3 7 , points: 18
-Result of the game: 13, Lesion
+Debit off gamer: 81, size: 1, balance: 2
+Issuance of cards croupier: 8 4 3 2 , points: 17
+Issuance of cards gamer: 81: 4 , points: 4
+Issuance of cards gamer: 81: 4 6 , points: 10
+Issuance of cards gamer: 81: 4 6 7 , points: 17
+Result of the game: 81, Lesion
 Clear card and ante 
-Put gain gamer: 13, size: 0, balance: 10
+Put gain gamer: 81, size: 0, balance: 2
 End_part 
 Start_part 
----------------Start game BlackJack---------------
-Create gamer: 33, balance: 10
-Start_part 
-Start_part 
-Debit off gamer: 33, size: 2, balance: 8
----------------Start game BlackJack---------------
-Load_list games
-Load_game: 33
-Start_part 
-Debit off gamer: 33, size: 2, balance: 6
-Issuance of cards croupier: 7 8 10 , points: 25
-Issuance of cards gamer: 33: 6 , points: 6
-Issuance of cards gamer: 33: 6 5 , points: 11
-Issuance of cards gamer: 33: 6 5 9 , points: 20
-Result of the game: 33, Win
+Debit off gamer: 81, size: 1, balance: 1
+Issuance of cards croupier: 10 T , points: 21
+Issuance of cards gamer: 81: 10 , points: 10
+Issuance of cards gamer: 81: 10 2 , points: 12
+Issuance of cards gamer: 81: 10 2 2 , points: 14
+Issuance of cards gamer: 81: 10 2 2 9 , points: 23
+Result of the game: 81, Lesion
 Clear card and ante 
-Put gain gamer: 33, size: 4, balance: 10
-End_part 
----------------Start game BlackJack---------------
-Load_list games
-Load_game: 33
-Start_part 
+Put gain gamer: 81, size: 0, balance: 1
 End_part 
 Start_part 
-Debit off gamer: 33, size: 2, balance: 8
-Issuance of cards croupier: 2 6 9 , points: 17
-Issuance of cards gamer: 33: 7 , points: 7
-Issuance of cards gamer: 33: 7 6 , points: 13
-Issuance of cards gamer: 33: 7 6 10 , points: 23
-Result of the game: 33, Lesion
+Debit off gamer: 81, size: 1, balance: 0
+Issuance of cards croupier: V V , points: 20
+Issuance of cards gamer: 81: 8 , points: 8
+Issuance of cards gamer: 81: 8 T , points: 19
+Result of the game: 81, Lesion
 Clear card and ante 
-Put gain gamer: 33, size: 0, balance: 8
+Put gain gamer: 81, size: 0, balance: 0
 End_part 
+Start_part 
+Issuance of cards croupier: 4 8 T , points: 23
+---------------Start game BlackJack---------------
 ================End game BlackJack================

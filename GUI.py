@@ -117,10 +117,27 @@ def show_stat_game(win, les):
     :return:
     """
     print('{} : {} (выйгрышей : пройгрышей)'.format(str(win), str(les)))
-def show_load_games(users):
+
+
+def show_list_games(users):
     print('---------------------------------')
     print('Выберите игру:')
     i = 0
     for user in users:
         i += 1
         print('  '+str(i)+'. '+user)
+
+    print('\n  0. Назад')
+
+
+def show_restore_fail():
+    print('---------------------------------')
+    print('Восстановить не удалось!')
+
+
+def show_name_gamer(gamer):
+    print('---------------------------------')
+    print('Name game: '+gamer.name)
+
+def show_not_enough_money():
+    print('Ошибка, низкий баланс!')
