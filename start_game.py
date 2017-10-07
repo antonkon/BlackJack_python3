@@ -3,7 +3,7 @@ if __name__ != '__main__':
     exit()
 
 import json
-import GUI
+from GUI import GUI
 from Gamer import Gamer
 from Table import Table
 from Croupier import Croupier
@@ -27,7 +27,7 @@ with open('game_log', 'r') as f:
 
         i += 1
         block_log.append(line)
-        if len(block_log) >= __min_stack and i < __min_stack:
+        if (len(block_log) >= __min_stack) and (i < __min_stack):
             while len(block_log) > __min_stack:
                 block_log.pop(0)
 
@@ -52,7 +52,6 @@ while True:
 
     except IOError:
         is_exist_games = 0
-
 
     # Показать главное меню
     if is_exist_games:
@@ -100,8 +99,8 @@ while True:
                 elif _flag[1] != '/2':
                     GUI.show_capital(gamer)
 
-
-            # Показываем следующее меню (игровое меню), ждём действий пользователя и заходим в соответствующий блок условий
+            # Показываем следующее меню (игровое меню),
+            # ждём действий пользователя и заходим в соответствующий блок условий
             while True:
                 if _flag[1] == '/2':
                     GUI.show_name_gamer(gamer)
@@ -113,7 +112,7 @@ while True:
 
                 if act == '1':
 
-                    if not 'table' in locals():
+                    if 'table' not in locals():
                         # Создаем стол, крупье и начинаем игру
                         table = Table(gamer.name)
                         croupier = Croupier(table)
@@ -152,7 +151,8 @@ while True:
                     # Выдать карты крупье
                     croupier.issue_cards_croupier()
                     # Выдать карты игроку
-                    croupier.issue_cards_gamer()
+                    if croupier.issue_cards_gamer() == 1:
+                        continue
                     # Узнать исход игры
                     is_win = croupier.calculate_points()
                     # Очистить стол, убрат карты и ставку
@@ -164,8 +164,6 @@ while True:
                     with open('game_log', 'a') as f:
                         log = 'End_part '
                         f.write(log + '\n')
-
-
 
                 elif act == '0':
                     break
@@ -211,8 +209,9 @@ while True:
 
                 try:
                     act = int(act)
-                except Exception:
+                except ValueError:
                     break
+
                 if act == 0:
                     break
                 names = list(names)

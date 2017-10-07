@@ -1,4 +1,4 @@
-import GUI
+from GUI import GUI
 import json
 
 
@@ -15,8 +15,8 @@ class Croupier:
         """
         # Проверить поставлена ли ставка
         if not self.table.user['ante']:
-            GUI.show_err(101)
-            exit()
+            GUI.show_not_ante()
+            return 1
 
         while True:
             # Выдать первую карту и прибавить очки
@@ -103,7 +103,6 @@ class Croupier:
         # Вскрыться: показать карты крупье, карты игрока и выйграл или проиграл игрок
         GUI.show_part_end(self.table.croupier, self.table.user, is_win)
 
-
         # Показать и записать статистику игры
         line = self.write_stat_game(is_win)
         GUI.show_stat_game(line[0], line[1])
@@ -125,7 +124,7 @@ class Croupier:
                 line[1] += 1
 
             # Формируем словарь и записываем в json файл
-            stat_log = {}
+            stat_log = dict()
             stat_log[self.table.user['name']] = line
 
             with open('stat_log.json', 'w') as fw:
@@ -173,7 +172,7 @@ class Croupier:
         except IOError:
             # Если файл не существует
             # Формируем словарь и записываем в json файл
-            stat_log = {}
+            stat_log = dict()
             stat_log[name_game] = line
 
             with open('stat_log.json', 'w') as fw:
@@ -197,7 +196,6 @@ class Croupier:
             json.dump(stat_log, fw)
 
         return
-
 
     def clear_card_get_ante(self, is_win):
         """Очищает поля с картами и поле ставки относительно результата игры
