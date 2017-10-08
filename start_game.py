@@ -124,7 +124,7 @@ while True:
                     # Спросить размер и поставить ставку
                     try:
                         ante = int(GUI.get_ante(gamer))
-                        if gamer.balance - ante <= 0:
+                        if gamer.balance - ante < 0:
                             GUI.show_not_enough_money()
 
                             with open('game_log', 'a') as f:
@@ -212,9 +212,11 @@ while True:
                 except ValueError:
                     break
 
-                if act == 0:
-                    break
                 names = list(names)
+
+                if act == 0 or act > len(names):
+                    break
+
                 gamer = Gamer(names[act-1], stat_log[names[act-1]][2])
 
                 with open('game_log', 'a') as f:

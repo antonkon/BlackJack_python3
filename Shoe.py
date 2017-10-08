@@ -10,22 +10,24 @@ class Shoe:
     """
     # Хранит все карты в шузе
     shoe = []
+    # Счётчик выданных карт
+    num_card_iss = 0
 
     def __init__(self, func_deck, num_deck):
         """Создает шуз.
 
-        :param func_deck: Функция возвращающая множество карт. Каждые элемент множества есть карта.
+        :param func_deck: Функция возвращающая колоду карт. Каждые элемент множества есть карта.
         :param num_deck: Количество колод участвующих в игре.
         """
         # Проверяем возвращает ли переданная функция множество
-        deck = func_deck()
-        if type(deck) != set:
+        self.deck = func_deck()
+        if type(self.deck) != set:
             print('Error: deck не является множеством !')
             return
 
         # Складываем все карты в одно место, в шуз
         for i in range(num_deck):
-            self.shoe.extend(deck)
+            self.shoe.extend(self.deck)
             deck = func_deck()
 
         # вычисляется кол-во карт, чтобы определять когда перетасовывать
@@ -45,4 +47,15 @@ class Shoe:
 
         :return: Возвращает объект Card, экземпляр карты.
         """
-        return self.shoe.pop(0)
+        # Берём с начала списка карту, помещаем в конец списка и возвращаем из функции
+        card = self.shoe.pop(0)
+        self.shoe.append(card)
+        # Увеличиваем счётчик выданных карт
+        self.num_card_iss += 1
+
+        # Проверяем не выдано ли более одной трети всех карт и если так, перемешиваем их
+        if self.num_card_iss > self.num_cards/3:
+            self.shuffle()
+            self.num_card_iss = 0
+
+        return card
