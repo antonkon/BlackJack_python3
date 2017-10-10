@@ -1,4 +1,4 @@
-import json
+from GUI import ViewFile
 from Deck import Deck
 from Shoe import Shoe
 
@@ -17,16 +17,12 @@ class Table:
         Создание стола заключается в добавлении пользователя в стол.
 
         :param user_name: имя игрока
-        :param get_card: Функция выдачи карт.
         """
         self.user['name'] = user_name
 
         # Создать карты и шуз
         # открыть файл config и взять из него параметр: количество колод
-        f = open("config.json", "r")
-        conf = json.loads(f.read())
+        conf = ViewFile.read_conf()
 
         # Создаём шуз: передаём функцию которая возвращает карты и количество колод участвующих в игре
         self.shoe = Shoe(Deck.create_deck, conf['number_deck'])
-
-        f.close()

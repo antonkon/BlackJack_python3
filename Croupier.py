@@ -1,5 +1,4 @@
-from GUI import GUI
-import json
+from GUI import ViewConsole, ViewFile
 
 
 class Croupier:
@@ -15,7 +14,7 @@ class Croupier:
         """
         # Проверить поставлена ли ставка
         if not self.table.user['ante']:
-            GUI.show_not_ante()
+            ViewConsole.show_not_ante()
             return 1
 
         while True:
@@ -24,22 +23,21 @@ class Croupier:
             self.table.user['points'] += self.table.user['card'][-1].value
 
             # Задокументировать выдачу карты и очки
-            f = open('game_log', 'a')
+
             log = 'Issuance of cards gamer: {n}: '.format(n=self.table.user['name'])
             for i in self.table.user['card']:
                 log += i.name + ' '
-            f.write(log+', points: '+str(self.table.user['points'])+'\n')
-            f.close()
+            ViewFile.write_game_log(log+', points: '+str(self.table.user['points']))
 
             # Показать карты и очки
-            GUI.show_card_points(self.table.user['card'], self.table.user['points'])
+            ViewConsole.show_card_points(self.table.user['card'], self.table.user['points'])
 
             if self.table.user['points'] >= 21:
                 act = '0'
             else:
                 # Узнать дальнейшее действие
-                GUI.show_game_dial()
-                act = GUI.get_action()
+                ViewConsole.show_game_dial()
+                act = ViewConsole.get_action()
 
             if act == '1':
                 # Продолжить выдавать карты
@@ -59,12 +57,10 @@ class Croupier:
                 break
 
         # Задокументировать выдачу карты
-        f = open('game_log', 'a')
         log = 'Issuance of cards croupier: '
         for i in self.table.croupier['card']:
             log += i.name + ' '
-        f.write(log+', points: '+str(self.table.croupier['points'])+'\n')
-        f.close()
+        ViewFile.write_game_log(log+', points: '+str(self.table.croupier['points']))
 
     def calculate_points(self):
         """ Подсчитать очки. """
@@ -93,109 +89,21 @@ class Croupier:
             self.table.user['ante'] *= 2
 
         # log результата игры
-        with open('game_log', 'a') as f:
-            if is_win:
-                log = 'Result of the game: {}, Win'.format(self.table.user['name'])
-            else:
-                log = 'Result of the game: {}, Lesion'.format(self.table.user['name'])
-            f.write(log + '\n')
-
-        # Вскрыться: показать карты крупье, карты игрока и выйграл или проиграл игрок
-        GUI.show_part_end(self.table.croupier, self.table.user, is_win)
-
-        # Показать и записать статистику игры
-        line = self.write_stat_game(is_win)
-        GUI.show_stat_game(line[0], line[1])
-
-        return is_win
-
-    def write_stat_game(self, is_win):
-        line = [0, 0, 0]
-        try:
-            # Открыть файл и считываем json объект
-            with open('stat_log.json', 'r') as fr:
-                stat_log = json.loads(fr.read())
-
-        except IOError:
-            # Если файл не существует
-            if is_win:
-                line[0] += 1
-            else:
-                line[1] += 1
-
-            # Формируем словарь и записываем в json файл
-            stat_log = dict()
-            stat_log[self.table.user['name']] = line
-
-            with open('stat_log.json', 'w') as fw:
-                json.dump(stat_log, fw)
-
-            return line
-
-        try:
-            # Если файл существует и в нём есть нужная запись
-            # Достаем из него значения и увеличиваем одно из них
-            line = stat_log[self.table.user['name']]
-
-        except KeyError:
-            # Если файл существует, но в нём нет нужной записи
-            line = [0, 0, 0]
 
         if is_win:
-            line[0] += 1
+            log = 'Result of the game: {}, Win'.format(self.table.user['name'])
         else:
-            line[1] += 1
+            log = 'Result of the game: {}, Lesion'.format(self.table.user['name'])
+        ViewFile.write_game_log(log)
 
-        stat_log[self.table.user['name']] = line
+        # Вскрыться: показать карты крупье, карты игрока и выйграл или проиграл игрок
+        ViewConsole.show_part_end(self.table.croupier, self.table.user, is_win)
 
-        with open('stat_log.json', 'w') as fw:
-            json.dump(stat_log, fw)
+        # Показать и записать статистику игры
+        line = ViewFile.write_stat_game(self.table.user['name'], is_win)
+        ViewConsole.show_stat_game(line[0], line[1])
 
-        return line
-
-    @classmethod
-    def write_stat_game_all(cls, name_game, balance, win=0, les=0):
-        """Запись статистики игр.
-        Этот метод должен быть в классе Gamer
-        :param name_game: Название игры
-        :param balance: Баланс
-        :param win: Кол-во выйгрышей
-        :param les: Кол-во пройгрышей
-        :return:
-        """
-        line = [win, les, balance]
-        try:
-            # Открыть файл и считываем json объект
-            with open('stat_log.json', 'r') as fr:
-                stat_log = json.loads(fr.read())
-
-        except IOError:
-            # Если файл не существует
-            # Формируем словарь и записываем в json файл
-            stat_log = dict()
-            stat_log[name_game] = line
-
-            with open('stat_log.json', 'w') as fw:
-                json.dump(stat_log, fw)
-
-            return
-
-        try:
-            # Если файл существует и в нём есть нужная запись
-            # Достаем из него значения
-            line = stat_log[name_game]
-            line[2] = balance
-
-        except KeyError:
-            # Если файл существует, но в нём нет нужной записи
-            line = [win, les, balance]
-
-        stat_log[name_game] = line
-
-        with open('stat_log.json', 'w') as fw:
-            json.dump(stat_log, fw)
-
-        return
+        return is_win
 
     def clear_card_get_ante(self, is_win):
         """Очищает поля с картами и поле ставки относительно результата игры
@@ -217,8 +125,7 @@ class Croupier:
         self.table.croupier['points'] = 0
 
         # log очистки карт и ставки
-        with open('game_log', 'a')as f:
-            log = 'Clear card and ante '
-            f.write(log+'\n')
+
+        ViewFile.write_game_log('Clear card and ante ')
 
         return gain

@@ -28,7 +28,6 @@ class Shoe:
         # Складываем все карты в одно место, в шуз
         for i in range(num_deck):
             self.shoe.extend(self.deck)
-            deck = func_deck()
 
         # вычисляется кол-во карт, чтобы определять когда перетасовывать
         self.num_cards = len(self.shoe)

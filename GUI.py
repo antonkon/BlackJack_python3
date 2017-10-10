@@ -1,4 +1,4 @@
-class GUI:
+class ViewConsole:
     """Консольный интерфейс.
 
     """
@@ -136,3 +136,156 @@ class GUI:
     @staticmethod
     def show_not_enough_money():
         print('Ошибка, низкий баланс!')
+
+
+class ViewFile:
+    """Интерфейс для записи в файл
+
+    """
+
+    @staticmethod
+    def write_game_log(log):
+        with open('game_log', 'a') as f:
+            f.write(log+'\n')
+
+    @staticmethod
+    def write_stat_game(game_name, is_win):
+        import json
+
+        line = [0, 0, 0]
+        try:
+            # Открыть файл и считываем json объект
+            with open('stat_log.json', 'r') as fr:
+                stat_log = json.loads(fr.read())
+
+        except IOError:
+            # Если файл не существует
+            if is_win:
+                line[0] += 1
+            else:
+                line[1] += 1
+
+            # Формируем словарь и записываем в json файл
+            stat_log = dict()
+            stat_log[game_name] = line
+
+            with open('stat_log.json', 'w') as fw:
+                json.dump(stat_log, fw)
+
+            return line
+
+        try:
+            # Если файл существует и в нём есть нужная запись
+            # Достаем из него значения и увеличиваем одно из них
+            line = stat_log[game_name]
+
+        except KeyError:
+            # Если файл существует, но в нём нет нужной записи
+            line = [0, 0, 0]
+
+        if is_win:
+            line[0] += 1
+        else:
+            line[1] += 1
+
+        stat_log[game_name] = line
+
+        with open('stat_log.json', 'w') as fw:
+            json.dump(stat_log, fw)
+
+        return line
+
+    @staticmethod
+    def write_stat_game_all(name_game, balance, win=0, les=0):
+        """Запись статистики игр.
+        Этот метод должен быть в классе Gamer
+        :param name_game: Название игры
+        :param balance: Баланс
+        :param win: Кол-во выйгрышей
+        :param les: Кол-во пройгрышей
+        :return:
+        """
+        import json
+
+        line = [win, les, balance]
+        try:
+            # Открыть файл и считываем json объект
+            with open('stat_log.json', 'r') as fr:
+                stat_log = json.loads(fr.read())
+
+        except IOError:
+            # Если файл не существует
+            # Формируем словарь и записываем в json файл
+            stat_log = dict()
+            stat_log[name_game] = line
+
+            with open('stat_log.json', 'w') as fw:
+                json.dump(stat_log, fw)
+
+            return
+
+        try:
+            # Если файл существует и в нём есть нужная запись
+            # Достаем из него значения
+            line = stat_log[name_game]
+            line[2] = balance
+
+        except KeyError:
+            # Если файл существует, но в нём нет нужной записи
+            line = [win, les, balance]
+
+        stat_log[name_game] = line
+
+        with open('stat_log.json', 'w') as fw:
+            json.dump(stat_log, fw)
+
+        return
+
+    @staticmethod
+    def read_conf():
+        """Возвращает содержимое конфиг файла
+
+        :return:
+        """
+        import json
+
+        with open("config.json", "r") as f:
+            conf = json.loads(f.read())
+
+        return conf
+
+    @staticmethod
+    def read_part_log():
+        """ Возвращает часть лог файла
+
+        :return:
+        """
+        with open('game_log', 'r') as f:
+            __min_stack = 10
+            block_log = []
+            i = 0
+            for line in f.readlines():
+                if line.find('Start game') != -1:
+                    i = 0
+
+                i += 1
+                block_log.append(line)
+                if (len(block_log) >= __min_stack) and (i < __min_stack):
+                    while len(block_log) > __min_stack:
+                        block_log.pop(0)
+
+        return block_log
+
+    @staticmethod
+    def check_exist_game():
+        import json
+
+        try:
+            # Открыть файл и считываем json объект
+            with open('stat_log.json', 'r') as fr:
+                json.loads(fr.read())
+
+            return 1
+
+        except IOError:
+            return 0

@@ -1,4 +1,4 @@
-from Croupier import Croupier
+from GUI import ViewFile
 
 
 class Gamer:
@@ -29,16 +29,18 @@ class Gamer:
         if size_ante <= self.balance:
             # Сделать запись о списывании средств
             self.balance -= size_ante
-            Croupier.write_stat_game_all(self.name, self.balance)
-            with open('game_log', 'a') as f:
-                f.write('Debit off gamer: {0}, size: {1}, balance: {2}\n'.format(self.name, size_ante, self.balance))
+            ViewFile.write_stat_game_all(self.name, self.balance)
 
+            ViewFile.write_game_log('Debit off gamer: {0}, size: {1}, balance: {2}'.format(self.name,
+                                                                                             size_ante,
+                                                                                             self.balance))
 
             return size_ante
 
     def put_gain(self, gain):
         self.balance += gain
+
         if gain != 0:
-            Croupier.write_stat_game_all(self.name, self.balance)
-        with open('game_log', 'a') as f:
-            f.write('Put gain gamer: {0}, size: {1}, balance: {2}\n'.format(self.name, gain, self.balance))
+            ViewFile.write_stat_game_all(self.name, self.balance)
+
+        ViewFile.write_game_log('Put gain gamer: {0}, size: {1}, balance: {2}'.format(self.name, gain, self.balance))
