@@ -567,3 +567,77 @@ Clear card and ante
 Put gain gamer: 12, size: 0, balance: 0
 End_part 
 ================End game BlackJack================
+---------------Start game BlackJack---------------
+Create gamer: 44, balance: 10
+Start_part 
+Debit off gamer: 44, size: 3, balance: 7
+Issuance of cards croupier: K 9 , points: 19
+Issuance of cards gamer: 44: 10 , points: 10
+Issuance of cards gamer: 44: 10 2 , points: 12
+Issuance of cards gamer: 44: 10 2 7 , points: 19
+Result of the game: 44, Lesion
+Clear card and ante 
+Put gain gamer: 44, size: 0, balance: 7
+End_part 
+Start_part 
+Debit off gamer: 44, size: 4, balance: 3
+Issuance of cards croupier: 8 6 9 , points: 23
+Issuance of cards gamer: 44: 4 , points: 4
+Issuance of cards gamer: 44: 4 V , points: 14
+---------------Start game BlackJack---------------
+Restore after fail
+Load_game: 44
+Start_part 
+---------------Start game BlackJack---------------
+Restore after fail
+Load_game: 44
+Start_part 
+---------------Start game BlackJack---------------
+Restore after fail
+Load_game: 44
+Start_part 
+End_part 
+Create gamer: 44, balance: 10
+Start_part 
+Debit off gamer: 44, size: 4, balance: 6
+Issuance of cards croupier: 5 4 9 , points: 18
+Issuance of cards gamer: 44: D , points: 10
+Issuance of cards gamer: 44: D 8 , points: 18
+---------------Start game BlackJack---------------
+Restore after fail
+Load_game: 44
+Start_part 
+---------------Start game BlackJack---------------
+Restore after fail
+Load_game: 44
+Start_part 
+---------------Start game BlackJack---------------
+Create gamer: 44, balance: 10
+Start_part 
+Debit off gamer: 44, size: 4, balance: 6
+Issuance of cards croupier: 5 8 7 , points: 20
+Issuance of cards gamer: 44: 3 , points: 3
+Issuance of cards gamer: 44: 3 6 , points: 9
+---------------Start game BlackJack---------------
+Restore after fail
+---------------Start game BlackJack---------------
+Create gamer: 44, balance: 10
+Start_part 
+Debit off gamer: 44, size: 4, balance: 6
+Issuance of cards croupier: 9 V , points: 19
+Issuance of cards gamer: 44: 8 , points: 8
+---------------Start game BlackJack---------------
+Restore after fail
+Load_game: 44
+Start_part 
+---------------Start game BlackJack---------------
+Create gamer: 44, balance: 10
+Start_part 
+Debit off gamer: 44, size: 5, balance: 5
+Issuance of cards croupier: T 5 7 , points: 23
+Issuance of cards gamer: 44: K , points: 10
+Issuance of cards gamer: 44: K 4 , points: 14
+---------------Start game BlackJack---------------
+Restore after fail
+Load_game: 44
+Start_part 

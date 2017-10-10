@@ -280,6 +280,9 @@ while True:
                     balance = int(str_log[str_log.find('balance: ')+9:-1])
                     Croupier.write_stat_game_all(name_game, ante + balance)
 
+                    with open('stat_log.json', 'r') as fr:
+                        stat_log = json.loads(fr.read())
+
                     continue
 
                 elif stage == 'End_part':
