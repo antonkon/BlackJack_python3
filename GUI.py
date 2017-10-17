@@ -1,15 +1,17 @@
-class ViewConsole:
+from View import AbcView
+from View import AbcViewFile
+
+
+class View(AbcView):
     """Консольный интерфейс.
 
     """
 
-    @staticmethod
-    def show_start_message():
+    def show_start_message(self):
         """ Вывести приветственное сообщение. """
         print('Здравствуйте, это игра BlackJack.\n')
 
-    @staticmethod
-    def show_main_menu(lines_menu):
+    def show_main_menu(self, lines_menu):
         """ Показать главное меню. """
         print('---------------------------------')
         menu = {1: '  1. Новая игра.\n',
@@ -22,18 +24,15 @@ class ViewConsole:
 
         print(mes)
 
-    @staticmethod
-    def get_start_action():
+    def get_start_action(self):
         """ Узнать первоначальное действие игрока. """
         return input("Введите соответствующую цифру: ")
 
-    @staticmethod
-    def get_action():
+    def get_action(self):
         """ Узнать действие игрока. """
         return input("> ")
 
-    @staticmethod
-    def get_name_gamer():
+    def get_name_gamer(self):
         """Спрашивает у пользователя желаемое имя игрока
 
         :return: Возвращает введёное имя игрока
@@ -43,67 +42,59 @@ class ViewConsole:
         name = input('Введите название игры: ')
         return name
 
-    @staticmethod
-    def show_game_menu():
+    def show_game_menu(self):
         """ Показать игровое меню. """
         print('---------------------------------')
         print('  1. Играть.\n  0. Назад.')
 
-    @staticmethod
-    def show_start_capital(gamer):
+    def show_start_capital(self, gamer):
         """ Показать начальный баланс. """
         print('Начальный баланс: ' + str(gamer.balance))
 
-    @staticmethod
-    def show_capital(gamer):
+    def show_capital(self, gamer):
         """ Показать баланс. """
         print(gamer)
 
-    @staticmethod
-    def show_not_ante():
+    def show_not_ante(self):
+        """ Сообщить что ставка не сделана. """
         print('Сделайте ставку!')
 
-    @staticmethod
-    def show_bye():
-        """ Показать прощальное сообщение. """
+    def show_bye(self):
+        """ Показать завершающее сообщение. """
         print('---------------------------------')
         print('До свидания!')
 
-    @staticmethod
-    def get_ante(gamer):
+    def get_ante(self, gamer):
         """ Спросить размер ставки. """
         print('Ваш баланс: {}'.format(str(gamer.balance)))
         return input('Размер вашей ставки ?\n> ')
 
-    @staticmethod
-    def show_card_points(cards, points):
+    def show_card_points(self, cards, points):
         """ Показать карты и очки. """
         s = '{0}\n{1}\n{2}\n{3}'.format(' ___ '*len(cards), '|   |'*len(cards),
                                         '| {.name} |'*len(cards), '|___|'*len(cards))
         print(s.format(*cards).replace('10 ', '10'))
         print('Кол-во очков: '+str(points))
 
-    @staticmethod
-    def show_game_dial():
+    def show_game_dial(self):
         """ Показать игровой диалог. """
         print('---------------------------------')
         print('  1. Ещё.\n  0. Хватит.')
 
-    @classmethod
-    def show_part_end(cls, player1, player2, is_win):
+    def show_part_end(self, player1, player2, is_win):
+        """ Вывести результат партии. """
         print('---------------------------------')
         print('Карты ' + player1['name'] + ':')
-        cls.show_card_points(player1['card'], player1['points'])
+        self.show_card_points(player1['card'], player1['points'])
         print('Карты ' + player2['name'] + ':')
-        cls.show_card_points(player2['card'], player2['points'])
+        self.show_card_points(player2['card'], player2['points'])
 
         if is_win:
             print('Вы выйграли !')
         else:
             print('Вы проиграли !')
 
-    @staticmethod
-    def show_stat_game(win, les):
+    def show_stat_game(self, win, les):
         """Показать статистику игры
 
         :param win: Кол-во выйгрышей игрока
@@ -112,44 +103,54 @@ class ViewConsole:
         """
         print('{} : {} (выйгрышей : пройгрышей)'.format(str(win), str(les)))
 
-    @staticmethod
-    def show_list_games(users):
+    def show_list_games(self, games):
+        """Вывести список доступных игр.
+
+        :param games: Список доступных игр
+        """
         print('---------------------------------')
         print('Выберите игру:')
         i = 0
-        for user in users:
+        for game in games:
             i += 1
-            print('  '+str(i)+'. '+user)
+            print('  '+str(i)+'. '+game)
 
         print('\n  0. Назад')
 
-    @staticmethod
-    def show_restore_fail():
+    def show_restore_fail(self):
+        """ Вывести сообщение о неудачном восстановлении. """
         print('---------------------------------')
         print('Восстановить не удалось!')
 
-    @staticmethod
-    def show_name_gamer(gamer):
+    def show_name_gamer(self, gamer):
+        """ Вывести назване игры (имя игрока). """
         print('---------------------------------')
         print('Name game: '+gamer.name)
 
-    @staticmethod
-    def show_not_enough_money():
+    def show_not_enough_money(self):
+        """ Вывести сообщение о низком балансе. """
         print('Ошибка, низкий баланс!')
 
 
-class ViewFile:
+class ViewFile(AbcViewFile):
     """Интерфейс для записи в файл
 
     """
 
-    @staticmethod
-    def write_game_log(log):
+    def write_game_log(self, log):
+        """Записать лог игры.
+
+        :param log: Сообщение.
+        """
         with open('game_log', 'a') as f:
             f.write(log+'\n')
 
-    @staticmethod
-    def write_stat_game(game_name, is_win):
+    def write_stat_game(self, game_name, is_win):
+        """Записать статистику игры.
+
+        :param game_name: Название игры (имя игрока)
+        :param is_win: если подедил - 1, иначе - 0
+        """
         import json
 
         line = [0, 0, 0]
@@ -195,10 +196,9 @@ class ViewFile:
 
         return line
 
-    @staticmethod
-    def write_stat_game_all(name_game, balance, win=0, les=0):
+    def write_stat_game_all(self, name_game, balance, win=0, les=0):
         """Запись статистики игр.
-        Этот метод должен быть в классе Gamer
+
         :param name_game: Название игры
         :param balance: Баланс
         :param win: Кол-во выйгрышей
@@ -241,11 +241,10 @@ class ViewFile:
 
         return
 
-    @staticmethod
-    def read_conf():
+    def read_conf(self):
         """Возвращает содержимое конфиг файла
 
-        :return:
+        :return: Словарь с конфигурациями
         """
         import json
 
@@ -254,30 +253,33 @@ class ViewFile:
 
         return conf
 
-    @staticmethod
-    def read_part_log():
+    def read_part_log(self, min_stack):
         """ Возвращает часть лог файла
 
-        :return:
+        :min_stack: Минимальное кол-во строк которое вернет функция
+        :return: Список строк лог файла
         """
-        with open('game_log', 'r') as f:
-            __min_stack = 10
-            block_log = []
-            i = 0
-            for line in f.readlines():
-                if line.find('Start game') != -1:
-                    i = 0
+        try:
+            f = open('game_log', 'r')
+        except IOError:
+            return 0
 
-                i += 1
-                block_log.append(line)
-                if (len(block_log) >= __min_stack) and (i < __min_stack):
-                    while len(block_log) > __min_stack:
-                        block_log.pop(0)
+        block_log = []
+        i = 0
+        for line in f.readlines():
+            if line.find('Start game') != -1:
+                i = 0
+
+            i += 1
+            block_log.append(line)
+            if (len(block_log) >= min_stack) and (i < min_stack):
+                while len(block_log) > min_stack:
+                    block_log.pop(0)
 
         return block_log
 
-    @staticmethod
-    def check_exist_game():
+    def check_exist_game(self):
+        """ Проверить существует ли файл статистики игры. """
         import json
 
         try:
@@ -289,3 +291,15 @@ class ViewFile:
 
         except IOError:
             return 0
+
+    def read_stat(self):
+        """ Возвращает словарь со статистикой игры.
+
+        :return:
+        """
+        import json
+
+        with open('stat_log.json', 'r') as fr:
+            stat_log = json.loads(fr.read())
+
+        return stat_log

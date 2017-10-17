@@ -1,12 +1,12 @@
-from GUI import ViewConsole, ViewFile
-
-
 class Croupier:
     """Класс: Крупье.
     Ведёт подсчёт очков и сбор ставок.
+
     """
-    def __init__(self, table):
+    def __init__(self, table, view, view_file):
         self.table = table
+        self.view = view
+        self.view_file = view_file
 
     def issue_cards_gamer(self):
         """Выдать карты игроку.
@@ -14,7 +14,7 @@ class Croupier:
         """
         # Проверить поставлена ли ставка
         if not self.table.user['ante']:
-            ViewConsole.show_not_ante()
+            self.view.show_not_ante()
             return 1
 
         while True:
@@ -27,17 +27,17 @@ class Croupier:
             log = 'Issuance of cards gamer: {n}: '.format(n=self.table.user['name'])
             for i in self.table.user['card']:
                 log += i.name + ' '
-            ViewFile.write_game_log(log+', points: '+str(self.table.user['points']))
+            self.view_file.write_game_log(log+', points: '+str(self.table.user['points']))
 
             # Показать карты и очки
-            ViewConsole.show_card_points(self.table.user['card'], self.table.user['points'])
+            self.view.show_card_points(self.table.user['card'], self.table.user['points'])
 
             if self.table.user['points'] >= 21:
                 act = '0'
             else:
                 # Узнать дальнейшее действие
-                ViewConsole.show_game_dial()
-                act = ViewConsole.get_action()
+                self.view.show_game_dial()
+                act = self.view.get_action()
 
             if act == '1':
                 # Продолжить выдавать карты
@@ -60,7 +60,7 @@ class Croupier:
         log = 'Issuance of cards croupier: '
         for i in self.table.croupier['card']:
             log += i.name + ' '
-        ViewFile.write_game_log(log+', points: '+str(self.table.croupier['points']))
+        self.view_file.write_game_log(log+', points: '+str(self.table.croupier['points']))
 
     def calculate_points(self):
         """ Подсчитать очки. """
@@ -94,14 +94,14 @@ class Croupier:
             log = 'Result of the game: {}, Win'.format(self.table.user['name'])
         else:
             log = 'Result of the game: {}, Lesion'.format(self.table.user['name'])
-        ViewFile.write_game_log(log)
+        self.view_file.write_game_log(log)
 
         # Вскрыться: показать карты крупье, карты игрока и выйграл или проиграл игрок
-        ViewConsole.show_part_end(self.table.croupier, self.table.user, is_win)
+        self.view.show_part_end(self.table.croupier, self.table.user, is_win)
 
         # Показать и записать статистику игры
-        line = ViewFile.write_stat_game(self.table.user['name'], is_win)
-        ViewConsole.show_stat_game(line[0], line[1])
+        line = self.view_file.write_stat_game(self.table.user['name'], is_win)
+        self.view.show_stat_game(line[0], line[1])
 
         return is_win
 
@@ -126,6 +126,6 @@ class Croupier:
 
         # log очистки карт и ставки
 
-        ViewFile.write_game_log('Clear card and ante ')
+        self.view_file.write_game_log('Clear card and ante ')
 
         return gain

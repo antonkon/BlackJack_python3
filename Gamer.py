@@ -1,6 +1,3 @@
-from GUI import ViewFile
-
-
 class Gamer:
     """Класс: Игрок.
     Создает игрока с именем и начальным капиталлом переданным конструктору.
@@ -9,13 +6,14 @@ class Gamer:
 
     """
 
-    def __init__(self, name, start_capital):
+    def __init__(self, name, start_capital, view_file):
         """Сохраняет начальноое значение баланса.
 
         :param start_capital: Значение стартового капиталла.
         """
         self.name = name
         self.balance = start_capital
+        self.view_file = view_file
 
     def __str__(self):
         return 'Текущий баланс: ' + str(self.balance)
@@ -29,11 +27,10 @@ class Gamer:
         if size_ante <= self.balance:
             # Сделать запись о списывании средств
             self.balance -= size_ante
-            ViewFile.write_stat_game_all(self.name, self.balance)
+            self.view_file.write_stat_game_all(self.name, self.balance)
 
-            ViewFile.write_game_log('Debit off gamer: {0}, size: {1}, balance: {2}'.format(self.name,
-                                                                                             size_ante,
-                                                                                             self.balance))
+            self.view_file.write_game_log('Debit off gamer: {0}, size: {1}, balance: {2}'.format(self.name, size_ante,
+                                                                                                 self.balance))
 
             return size_ante
 
@@ -41,6 +38,7 @@ class Gamer:
         self.balance += gain
 
         if gain != 0:
-            ViewFile.write_stat_game_all(self.name, self.balance)
+            self.view_file.write_stat_game_all(self.name, self.balance)
 
-        ViewFile.write_game_log('Put gain gamer: {0}, size: {1}, balance: {2}'.format(self.name, gain, self.balance))
+        self.view_file.write_game_log('Put gain gamer: {0}, size: {1}, balance: {2}'.format(self.name, gain,
+                                                                                            self.balance))
