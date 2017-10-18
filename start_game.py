@@ -16,7 +16,7 @@ view.show_start_message()
 
 # Показывает что игра может быть загружена
 is_restore_game = 0
-_flag = ['', '', '']
+_flag = ['', '', '', {}]
 
 # Загрузка части лог файла
 block_log = view_file.read_part_log(10)
@@ -48,7 +48,7 @@ while True:
             view.show_main_menu([1, 3, 10])
         else:
             view.show_main_menu([1, 10])
-
+    view_file.write_game_log('Load_menu')
     is_exist_games = 0
     act = view.get_start_action()
 
@@ -76,7 +76,8 @@ while True:
                 if _flag[0] == '/1':
                     view.show_name_gamer(gamer)
                     view.show_capital(gamer)
-                    _flag = ['', '', '']
+                    if _flag[2] != '/3':
+                        _flag = ['', '', '', {}]
                 elif _flag[1] != '/2':
                     view.show_capital(gamer)
 
@@ -86,8 +87,8 @@ while True:
                 if _flag[1] == '/2':
                     view.show_name_gamer(gamer)
                     act = '1'
-                    _flag = ['', '', '']
-                else:
+                    _flag = ['', '', '', {}]
+                elif _flag[2] != '/3':
                     view.show_game_menu()
                     act = view.get_action()
 
@@ -98,39 +99,72 @@ while True:
                         table = Table(gamer.name, view_file)
                         croupier = Croupier(table, view, view_file)
 
-                    # log начала партии
-                    view_file.write_game_log('Start_part ')
+                    if _flag[2] == '/3':
+                        from Card import Card
 
-                    # Спросить размер и поставить ставку
-                    try:
-                        ante = int(view.get_ante(gamer))
-                        if gamer.balance - ante < 0:
-                            view.show_not_enough_money()
+                        # Восстановить очки и карты крупье
+                        table.croupier['points'] = _flag[3]['points_croup']
+                        for c in _flag[3]['card_croup']:
+                            if c.isdigit():
+                                table.croupier['card'].append(Card(c, int(c)))
+                            else:
+                                table.croupier['card'].append(Card(c, 10))
 
-                            # log окончания партии
+                        # Восстановить очки, карты и ставку игрока
+                        table.user['points'] = _flag[3]['points_user']
+                        table.user['ante'] = _flag[3]['ante']
+                        for c in _flag[3]['card_user']:
+                            if c.isdigit():
+                                table.user['card'].append(Card(c, int(c)))
+                            else:
+                                table.user['card'].append(Card(c, 10))
+
+                        # log восстановления карт
+                        view_file.write_game_log('Restored_card')
+
+                        # Выдать карты игроку
+                        if croupier.issue_cards_gamer(1) == 1:
+                            continue
+
+                        _flag = ['', '', '', {}]
+
+                    else:
+
+                        # log начала партии
+                        view_file.write_game_log('Start_part ')
+
+                        # Спросить размер и поставить ставку
+                        try:
+                            ante = int(view.get_ante(gamer))
+                            if gamer.balance - ante < 0:
+                                view.show_not_enough_money()
+
+                                # log окончания партии
+                                view_file.write_game_log('End_part ')
+
+                                continue
+
+                        except ValueError:
+                            # log конца партии
                             view_file.write_game_log('End_part ')
 
                             continue
 
-                    except ValueError:
-                        # log конца партии
-                        view_file.write_game_log('End_part ')
+                        if 0 < ante:
+                            table.user['ante'] = gamer.place_ante(ante)
+                        else:
 
-                        continue
+                            # log конца партии
+                            view_file.write_game_log('End_part ')
 
-                    if 0 < ante:
-                        table.user['ante'] = gamer.place_ante(ante)
-                    else:
+                            continue
+                        # Выдать карты крупье
+                        croupier.issue_cards_croupier()
 
-                        # log конца партии
-                        view_file.write_game_log('End_part ')
+                        # Выдать карты игроку
+                        if croupier.issue_cards_gamer() == 1:
+                            continue
 
-                        continue
-                    # Выдать карты крупье
-                    croupier.issue_cards_croupier()
-                    # Выдать карты игроку
-                    if croupier.issue_cards_gamer() == 1:
-                        continue
                     # Узнать исход игры
                     is_win = croupier.calculate_points()
 
@@ -165,13 +199,13 @@ while True:
                 stat_log = view_file.read_stat()
 
                 # Случай восстановления после сбоя
-                gamer = Gamer(_flag[2], stat_log[_flag[2]][2], view_file)
+                gamer = Gamer(_flag[3]['name_game'], stat_log[_flag[3]['name_game']][2], view_file)
 
                 if _flag[1] == '/2':
                     _flag[0] = ''
 
                 # log загрузки игры
-                view_file.write_game_log('Load_game: ' + _flag[2])
+                view_file.write_game_log('Load_game: ' + _flag[3]['name_game'])
 
             else:
 
@@ -219,19 +253,19 @@ while True:
                 if stage.startswith('-'):
                     stage = stage.replace('---------------', '')
 
-                if stage == 'Start':
+                if stage == 'Start' or stage == 'Load_menu':
                     act = ''
                     break
 
                 elif stage == 'Start_part':
                     _flag[0] = '/1'
                     _flag[1] = '/2'
-                    _flag[2] = str_log[str_log.find(': ') + 2:str_log.find(',')]
+                    _flag[3] = {'name_game': str_log[str_log.find(': ') + 2:str_log.find(',')]}
                     continue
 
                 elif stage == 'Load_game:' or stage == 'Create':
                     _flag[0] = '/1'
-                    _flag[2] = str_log[str_log.find(': ') + 2:str_log.find(',')]
+                    _flag[3] = {'name_game': str_log[str_log.find(': ') + 2:str_log.find(',')]}
                     act = '2'
                     break
 
@@ -248,19 +282,30 @@ while True:
                     break
 
                 elif stage == 'Issuance':
+                    name_game = str_log[str_log.find(': ') + 2:str_log.find(';')]
+                    card_user = str_log[str_log.find('; ') + 2:str_log.find(' ,')].split(' ')
+                    points_user = int(str_log[str_log.find('s: ') + 3:-1])
+
+                    while str_log.find('croupier') == -1:
+                        str_log = block_log.pop()
+
+                    card_croup = str_log[str_log.find(': ') + 2:str_log.find(' ,')].split(' ')
+                    points_croup = int(str_log[str_log.find('s: ') + 3:-1])
+
                     while stage != 'Debit':
                         str_log = block_log.pop()
                         stage = str_log[:str_log.find(' ')]
 
-                    # Вернуть ставку
-                    name_game = str_log[str_log.find(': ')+2:str_log.find(',')]
-                    ante = int(str_log[str_log.find('e: ')+3:str_log.find(', b')])
-                    balance = int(str_log[str_log.find('balance: ')+9:-1])
-                    view_file.write_stat_game_all(name_game, ante + balance)
+                    ante = int(str_log[str_log.find('e: ') + 3:str_log.find(', b')])
 
-                    stat_log = view_file.read_stat()
+                    _flag[0] = '/1'
+                    _flag[1] = ''
+                    _flag[2] = '/3'
+                    _flag[3] = {'name_game': name_game, 'card_user': card_user, 'points_user': points_user,
+                                'card_croup': card_croup, 'points_croup': points_croup, 'ante': ante}
 
-                    continue
+                    act = '2'
+                    break
 
                 elif stage == 'End_part':
                     while stage != 'Load_game:' and stage != 'Create':
@@ -268,7 +313,7 @@ while True:
                         stage = str_log[:str_log.find(' ')]
 
                     _flag[0] = '/1'
-                    _flag[2] = str_log[str_log.find(': ') + 2:str_log.find(',')]
+                    _flag[3] = {'name_game': str_log[str_log.find(': ') + 2:str_log.find(',')]}
                     act = '2'
                     break
 

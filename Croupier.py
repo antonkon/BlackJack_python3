@@ -8,7 +8,7 @@ class Croupier:
         self.view = view
         self.view_file = view_file
 
-    def issue_cards_gamer(self):
+    def issue_cards_gamer(self, _flag = 0):
         """Выдать карты игроку.
 
         """
@@ -18,17 +18,19 @@ class Croupier:
             return 1
 
         while True:
-            # Выдать первую карту и прибавить очки
-            self.table.user['card'].append(self.table.shoe.get_card())
-            self.table.user['points'] += self.table.user['card'][-1].value
 
-            # Задокументировать выдачу карты и очки
+            if not _flag:
+                # Выдать первую карту и прибавить очки
+                self.table.user['card'].append(self.table.shoe.get_card())
+                self.table.user['points'] += self.table.user['card'][-1].value
 
-            log = 'Issuance of cards gamer: {n}: '.format(n=self.table.user['name'])
-            for i in self.table.user['card']:
-                log += i.name + ' '
-            self.view_file.write_game_log(log+', points: '+str(self.table.user['points']))
-
+                # Задокументировать выдачу карты и очки
+                log = 'Issuance of cards gamer: {n}; '.format(n=self.table.user['name'])
+                for i in self.table.user['card']:
+                    log += i.name + ' '
+                self.view_file.write_game_log(log+', points: '+str(self.table.user['points']))
+            else:
+                _flag = 0
             # Показать карты и очки
             self.view.show_card_points(self.table.user['card'], self.table.user['points'])
 

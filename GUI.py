@@ -125,7 +125,7 @@ class View(AbcView):
     def show_name_gamer(self, gamer):
         """ Вывести назване игры (имя игрока). """
         print('---------------------------------')
-        print('Name game: '+gamer.name)
+        print('Название игры: '+gamer.name)
 
     def show_not_enough_money(self):
         """ Вывести сообщение о низком балансе. """
